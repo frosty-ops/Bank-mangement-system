@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bank Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Bank Management System</h1>
+
+        <h2>Current Balance: ₹{{ balance }}</h2>
+
+        <a href="/deposit">
+            <button>Deposit</button>
+        </a>
+
+        <a href="/withdraw">
+            <button>Withdraw</button>
+        </a>
+
+        <a href="/history">
+            <button>Transaction History</button>
+        </a>
+
+    </div>
+
+</body>
+</html>
