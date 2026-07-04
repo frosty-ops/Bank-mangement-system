@@ -85,7 +85,7 @@ B.Sc. Computer Science Student
 ## 📸 Project Screenshots
 
 ### 🏠 Dashboard
-![Dashboard](images/dashboard.png)
+![Dashboard](images/dashbord.png)
 
 ---
 
