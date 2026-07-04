@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request
 from database import get_connection
 
 app = Flask(__name__)
@@ -11,7 +11,6 @@ def dashboard():
 
     cursor.execute("SELECT balance FROM account WHERE id = 1")
     result = cursor.fetchone()
-
     balance = result[0]
 
     cursor.close()
@@ -26,6 +25,15 @@ def deposit():
     if request.method == "POST":
 
         amount = float(request.form["amount"])
+
+        # Validate amount
+        if amount <= 0:
+            return """
+            <script>
+                alert("Invalid Amount!\\n\\nPlease enter an amount greater than zero.");
+                window.location.href="/deposit";
+            </script>
+            """
 
         connection = get_connection()
         cursor = connection.cursor()
@@ -48,7 +56,12 @@ def deposit():
         cursor.close()
         connection.close()
 
-        return redirect("/")
+        return """
+        <script>
+            alert("Success!\\n\\nAmount deposited successfully.");
+            window.location.href="/";
+        </script>
+        """
 
     return render_template("deposit.html")
 
@@ -59,6 +72,15 @@ def withdraw():
     if request.method == "POST":
 
         amount = float(request.form["amount"])
+
+        # Validate amount
+        if amount <= 0:
+            return """
+            <script>
+                alert("Invalid Amount!\\n\\nPlease enter an amount greater than zero.");
+                window.location.href="/withdraw";
+            </script>
+            """
 
         connection = get_connection()
         cursor = connection.cursor()
@@ -79,16 +101,35 @@ def withdraw():
             cursor.execute(
                 "INSERT INTO transactions (type, amount, balance_after) VALUES (%s, %s, %s)",
                 ("Withdraw", amount, new_balance)
-                )
+            )
 
             connection.commit()
 
-        cursor.close()
-        connection.close()
+            cursor.close()
+            connection.close()
 
-        return redirect("/")
+            return """
+            <script>
+                alert("Success!\\n\\nAmount withdrawn successfully.");
+                window.location.href="/";
+            </script>
+            """
+
+        else:
+
+            cursor.close()
+            connection.close()
+
+            return """
+            <script>
+                alert("Insufficient Balance!\\n\\nYour account balance is insufficient to complete this transaction.");
+                window.location.href="/withdraw";
+            </script>
+            """
 
     return render_template("withdraw.html")
+
+
 @app.route("/history")
 def history():
 
